@@ -1,0 +1,213 @@
+
+# Blueprint for the National Health Professionals Council System
+
+models:
+  User:
+    profile_photo: string
+    username: string:unique
+    phone_number: string:unique
+    email: string:unique
+    nationality: id:foreign:Country
+    nationality_doc_type: enum
+    nationality_doc_number: string:unique
+    state: integer
+    nationality_doc_upload: string
+    password: string
+    temporary_password: string
+    creation_date: timestamp
+    last_login: timestamp
+    status: enum
+    two_factor_enabled: boolean
+    language_preference: string
+    timezone: string
+    referral_code: string
+    created_by: id
+
+    relations:
+      hasMany: Application
+      hasMany: License
+      hasMany: Institution
+      hasMany: Payment
+      hasOne: KYC
+      belongsTo: Country
+
+  AuditLog:
+    user_id: id:foreign:User
+    action: string
+    timestamp: timestamp
+    details: text
+    ip_address: string
+    user_agent: string
+    location: string
+    is_successful: boolean
+    error_message: text
+    related_transaction_id: id:foreign
+    notes: text
+    audit_type: enum
+
+    relations:
+      belongsTo: User
+
+  Country:
+    country_name: string:unique
+    phone_code: integer:unique
+    country_flag: string
+    country_shortcode: string:unique
+    continent: string
+    language_id: id:foreign:Language
+
+    relations:
+      hasMany: User
+      belongsTo: Language
+
+  Language:
+    language_name: string:unique
+    langugae_code: string:unique
+
+    relations:
+      hasMany: Country
+
+  KYC:
+    user_id: id:foreign:User
+    address: string
+    phone_number: string
+    email: string
+    document_type: enum
+    document_number: string
+    document_upload: string
+    status: enum
+
+    relations:
+      belongsTo: User
+
+  License:
+    user_id: id:foreign:User
+    institution_id: id:foreign:Institution
+    type: enum
+    status: enum
+    issued_at: timestamp
+    expires_at: timestamp
+    payment_id: id:foreign:Payment
+
+    relations:
+      belongsTo: User
+      belongsTo: Institution
+      belongsTo: Payment
+
+  Institution:
+    user_id: id:foreign:User
+    name: string
+    address: string
+    registration_number: string:unique
+    status: enum
+
+    relations:
+      belongsTo: User
+      hasMany: License
+
+  Payment:
+    application_id: id:foreign:Application
+    amount: decimal
+    method: enum
+    reference: string
+    status: enum
+    paid_at: timestamp
+
+    relations:
+      belongsTo: Application
+      hasOne: License
+
+  Application:
+    user_id: id:foreign:User
+    type: enum
+    status: enum
+    submitted_at: timestamp
+    reviewed_at: timestamp
+    approved_at: timestamp
+    payment_id: id:foreign:Payment
+
+    relations:
+      belongsTo: User
+      hasOne: Payment
+
+  Verification:
+    user_id: id:foreign:User
+    status: enum
+    verified_at: timestamp
+
+    relations:
+      belongsTo: User
+
+controllers:
+  User:
+    index
+    create
+    store
+    show
+    edit
+    update
+    destroy
+    showOTPForm
+    verifyOTP
+
+  Dashboard:
+    index
+
+  Application:
+    index
+    create
+    store
+    show
+    edit
+    update
+    destroy
+
+  KYC:
+    store
+    status
+
+  License:
+    create
+    store
+    apiIndex
+
+  Payment:
+    index
+    store
+
+  Registry:
+    index
+
+  Admin:
+    showLoginForm
+    login
+
+  AdminDashboard:
+    index
+
+  KYCReview:
+    index
+    approve
+
+  ApplicationReview:
+    index
+    show
+    approve
+
+  PaymentReview:
+    review
+
+  LicenseAdmin:
+    index
+
+  Report:
+    index
+
+  AuditLog:
+    index
+
+seeders:
+  Country
+  Language
+  User
+  AuditLog
