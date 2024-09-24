@@ -3,13 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Impersonate, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, Blameable;
+    // use AuthenticationLoggable
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +26,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+
+        'profile_photo',
+        'username',
+        'phone_number',
+        'nationality',
+        'created_by',
+        'updated_by',
+        'status',
     ];
 
     /**
@@ -32,6 +46,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -43,5 +58,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function userSettings(): HasOne
+    {
+        return $this->hasOne(UserSettings::class, 'user_id');
     }
 }
