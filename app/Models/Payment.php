@@ -2,33 +2,33 @@
 
 namespace App\Models;
 
-use App\Enums\VerificationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Verification extends Model
+class Payment extends Model
 {
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'application_id',
+        'amount',
+        'method',
+        'reference',
         'status',
-        'verified_at',
+        'paid_at',
     ];
-    protected $casts = [
-        'status' => VerificationStatus::class,
-    ];
-    public function user(): BelongsTo
+
+    public function application(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Application::class);
     }
 
     protected function casts(): array
     {
         return [
-            'verified_at' => 'timestamp',
+            'paid_at' => 'timestamp',
         ];
     }
 }

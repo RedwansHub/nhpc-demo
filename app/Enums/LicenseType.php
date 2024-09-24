@@ -9,9 +9,9 @@ use BenSampo\Enum\Enum;
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class KycStatus extends Enum
+final class LicenseType extends Enum
 {
-    const PENDING = 'pending';
-    const APPROVED = 'approved';
-    const REJECTED = 'rejected';
+    const STANDARD = 'standard';
+    const PREMIUM = 'premium';
+    const ENTERPRISE = 'enterprise';
 }
