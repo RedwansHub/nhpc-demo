@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +16,22 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('username');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->string('phone_number')->nullable();
+
+            $table->string('profile_photo')->nullable();
+            $table->string('nationality')->nullable();
+
+            $table->string('status')->default(UserStatus::ACTIVE);
+
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
