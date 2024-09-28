@@ -26,8 +26,13 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'username' => fake()->unique()->userName(), // Ensure username is populated
+            'phone_number' => fake()->phoneNumber(), // Optional field
+            'nationality' => fake()->country(), // Optional field
+            'profile_photo' => fake()->imageUrl(), // Optional field for profile photo
+            'status' => 'Active', // Use a default status or randomElement if you have multiple statuses
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('password'), // Default password
             'remember_token' => Str::random(10),
         ];
     }
